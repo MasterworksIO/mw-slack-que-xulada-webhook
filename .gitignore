@@ -1,0 +1,8 @@
+node_modules/
+package-lock.json
+_build/
+.pnpm-debug.log
+.env.local
+.env.*.local
+.wrangler
+

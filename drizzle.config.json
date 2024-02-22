@@ -1,0 +1,5 @@
+{
+  "schema": "src/DB.schema.ts",
+  "out": "migrations",
+  "breakpoints": true
+}

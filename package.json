@@ -1,0 +1,33 @@
+{
+  "name": "mw-slack-que-xulada-webhook",
+  "version": "1.0.0",
+  "description": "Taco and Burrito Slack tracker webhook handler",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "db:apply": "wrangler d1 migrations apply xulada_development --local",
+    "db:check": "drizzle-kit check:sqlite",
+    "db:generate": "drizzle-kit generate:sqlite",
+    "db:up": "drizzle-kit up:sqlite",
+    "deploy": "wrangler deploy --keep-vars",
+    "start": "wrangler dev",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "typecheck": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@cloudflare/workers-types": "4.20240208.0",
+    "@total-typescript/ts-reset": "^0.5.1",
+    "drizzle-kit": "0.20.14",
+    "prettier": "3.2.5",
+    "typescript": "5.3.3",
+    "wrangler": "3.28.4"
+  },
+  "dependencies": {
+    "better-sqlite3": "9.4.3",
+    "drizzle-orm": "0.29.4",
+    "zod": "3.22.4"
+  }
+}

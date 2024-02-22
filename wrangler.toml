@@ -1,0 +1,15 @@
+name = "mw-slack-que-xulada-webhook-development"
+main = "src/index.ts"
+compatibility_date = "2023-12-04"
+logpush=true
+account_id = "5f49e4122986891b0d0a801d3485c877"
+
+d1_databases = [
+  { binding = "XULADA_DATABASE", database_name = "xulada_development", database_id = "80f31068-f9f8-490f-9e70-2580a4250dfa" },
+]
+
+[env.production]
+name = "mw-slack-que-xulada-webhook"
+d1_databases = [
+  { binding = "XULADA_DATABASE", database_name = "xulada_production", database_id = "663c5685-e62b-41f9-9a18-c8130a2e716f" },
+]
