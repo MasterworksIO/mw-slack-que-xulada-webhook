@@ -3,9 +3,12 @@ import { drizzle } from 'drizzle-orm/d1'
 
 import { SubscriptionEvent } from './Slack.schema.ts'
 import { acknowledgements } from './DB.schema.ts'
+import { addReaction } from './lib/addReaction.ts'
+import { pickReaction } from './lib/pickReaction.ts'
 
 type EnvironmentVariables = {
-  WORKER_SLACK_LISTENER_PATHNAME: string
+  SLACK_APP_OAUTH_TOKEN?: string
+  WORKER_SLACK_LISTENER_PATHNAME?: string
   XULADA_DATABASE: D1Database
 }
 
@@ -18,7 +21,7 @@ const getMentions = (text: string): string[] => {
 }
 
 const Module: ExportedHandler<EnvironmentVariables> = {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     // We gotta respond 200 OK to Slack, even in most error cases, to avoid retries.
     // This is just to not type the same thing over and over.
     const OK = new Response('OK', { status: 200 })
@@ -70,12 +73,6 @@ const Module: ExportedHandler<EnvironmentVariables> = {
 
           const receivers = getMentions(event.text)
 
-          if (!receivers.length) {
-            console.info('Ignoring message without mentions', data.event_id)
-            return OK
-          }
-
-          const db = drizzle(env.XULADA_DATABASE)
           const values = receivers
             .map((receiver) => ({
               apiAppId: data.api_app_id,
@@ -90,9 +87,34 @@ const Module: ExportedHandler<EnvironmentVariables> = {
             }))
             .filter((value) => value.to !== value.from)
 
-          const result = await db.insert(acknowledgements).values(values).returning().all()
+          if (!values.length) {
+            console.info('Ignoring message without mentions', data.event_id)
+            return OK
+          }
+
+          const result = await drizzle(env.XULADA_DATABASE)
+            .insert(acknowledgements)
+            .values(values)
+            .returning()
+            .all()
 
           console.info(`Inserted ${result.length} acknowledgements`)
+
+          // We don't need to wait for this to finish to respond to Slack
+          ctx.waitUntil(
+            (async () => {
+              try {
+                await addReaction(env, {
+                  channel: event.channel,
+                  name: pickReaction(),
+                  timestamp: event.ts,
+                })
+              } catch (err) {
+                console.error(err)
+              }
+            })()
+          )
+
           break
         default:
           console.warn('Unhandled event type', data)
