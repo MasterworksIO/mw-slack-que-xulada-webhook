@@ -80,9 +80,11 @@ const Module: ExportedHandler<EnvironmentVariables> = {
               eventContext: data.event_context,
               eventId: data.event_id,
               eventTime: new Date(data.event_time * 1000),
+              eventTs: event.event_ts,
               from: event.user,
               teamId: data.team_id,
               text: event.text,
+              threadTs: event.thread_ts,
               to: receiver,
             }))
             .filter((value) => value.to !== value.from)

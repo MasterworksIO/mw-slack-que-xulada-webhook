@@ -8,6 +8,9 @@ export const acknowledgements = sqliteTable('acknowledgements', {
   channel: text('channel').notNull(),
   text: text('text').notNull(),
 
+  eventTs: text('event_ts'),
+  threadTs: text('thread_ts'),
+
   apiAppId: text('api_app_id').notNull(),
   eventContext: text('event_context').notNull(),
   eventId: text('event_id').notNull(),
