@@ -47,7 +47,7 @@ const POSSIBLE_ERRORS = [
   'team_added_to_org',
 ] as const
 
-const RESPONSE_SCHEMA = z.discriminatedUnion('ok', [
+const ResponseSchema = z.discriminatedUnion('ok', [
   z.object({ ok: z.literal(true) }),
   z.object({ ok: z.literal(false), error: z.enum(POSSIBLE_ERRORS) }),
 ])
@@ -74,7 +74,7 @@ export const addReaction = async (env: Environment, options: ReactionOptions): P
     body: JSON.stringify(options),
   })
 
-  const data = RESPONSE_SCHEMA.parse(await response.json())
+  const data = ResponseSchema.parse(await response.json())
 
   if (!data.ok) {
     if (data.error === 'already_reacted') {

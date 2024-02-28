@@ -5,6 +5,8 @@ import { SubscriptionEvent } from './Slack.schema.ts'
 import { acknowledgements } from './DB.schema.ts'
 import { addReaction } from './lib/addReaction.ts'
 import { pickReaction } from './lib/pickReaction.ts'
+import partition from './utils/partition.ts'
+import { postEphemeralMessage } from './lib/postEphemeralMessage.ts'
 
 type EnvironmentVariables = {
   SLACK_APP_OAUTH_TOKEN?: string
@@ -71,23 +73,43 @@ const Module: ExportedHandler<EnvironmentVariables> = {
             return OK
           }
 
-          const receivers = getMentions(event.text)
+          const [selfReference, receivers] = partition(
+            getMentions(event.text),
+            (mention) => mention === event.user
+          )
 
-          const values = receivers
-            .map((receiver) => ({
-              apiAppId: data.api_app_id,
-              channel: event.channel,
-              eventContext: data.event_context,
-              eventId: data.event_id,
-              eventTime: new Date(data.event_time * 1000),
-              eventTs: event.event_ts,
-              from: event.user,
-              teamId: data.team_id,
-              text: event.text,
-              threadTs: event.thread_ts,
-              to: receiver,
-            }))
-            .filter((value) => value.to !== value.from)
+          if (selfReference.length) {
+            console.info('Ignoring message with self-mentions', data.event_id)
+
+            ctx.waitUntil((async () => {
+              try {
+                await postEphemeralMessage(env, {
+                  channel: event.channel,
+                  text: `Psst! You can't prop yourself :taco: \nThat would be silly. Try mentioning someone else!`,
+                  thread_ts: event.thread_ts,
+                  user: event.user,
+                })
+              } catch (err) {
+                console.error(err)
+              }
+            })())
+
+            return OK
+          }
+
+          const values = receivers.map((receiver) => ({
+            apiAppId: data.api_app_id,
+            channel: event.channel,
+            eventContext: data.event_context,
+            eventId: data.event_id,
+            eventTime: new Date(data.event_time * 1000),
+            eventTs: event.event_ts,
+            from: event.user,
+            teamId: data.team_id,
+            text: event.text,
+            threadTs: event.thread_ts,
+            to: receiver,
+          }))
 
           if (!values.length) {
             console.info('Ignoring message without mentions', data.event_id)
