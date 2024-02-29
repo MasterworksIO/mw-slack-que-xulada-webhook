@@ -1,0 +1,62 @@
+{
+  "token": "<REDACTED>",
+  "team_id": "T6PF7KGUC",
+  "context_team_id": "T6PF7KGUC",
+  "context_enterprise_id": null,
+  "api_app_id": "A06KNRV3AFR",
+  "event": {
+    "type": "message",
+    "subtype": "message_changed",
+    "message": {
+      "type": "message",
+      "subtype": "bot_message",
+      "text": ":gear: Running workflow",
+      "username": "MasterworksIO/frontend",
+      "bot_id": "BUJE49NJG",
+      "app_id": "AUJTZ2UJZ",
+      "blocks": [],
+      "attachments": [],
+      "edited": {
+        "user": "BUJE49NJG",
+        "ts": "1709071981.000000"
+      },
+      "ts": "1709071906.085819",
+      "source_team": "T6PF7KGUC",
+      "user_team": "T6PF7KGUC"
+    },
+    "previous_message": {
+      "type": "message",
+      "subtype": "bot_message",
+      "text": ":gear: Running workflow",
+      "ts": "1709071906.085819",
+      "username": "MasterworksIO/frontend",
+      "bot_id": "BUJE49NJG",
+      "app_id": "AUJTZ2UJZ",
+      "blocks": [],
+      "attachments": [],
+      "edited": {
+        "user": "BUJE49NJG",
+        "ts": "1709071952.000000"
+      }
+    },
+    "channel": "C012NUFBCLU",
+    "hidden": true,
+    "ts": "1709071982.021800",
+    "event_ts": "1709071982.021800",
+    "channel_type": "channel"
+  },
+  "type": "event_callback",
+  "event_id": "Ev06M0FLS7MJ",
+  "event_time": 1709071982,
+  "authorizations": [
+    {
+      "enterprise_id": null,
+      "team_id": "T6PF7KGUC",
+      "user_id": "U06L6BMLGN8",
+      "is_bot": true,
+      "is_enterprise_install": false
+    }
+  ],
+  "is_ext_shared_channel": false,
+  "event_context": "4-eyJldCI6Im1lc3NhZ2UiLCJ0aWQiOiJUNlBGN0tHVUMiLCJhaWQiOiJBMDZLTlJWM0FGUiIsImNpZCI6IkMwMTJOVUZCQ0xVIn0"
+}
