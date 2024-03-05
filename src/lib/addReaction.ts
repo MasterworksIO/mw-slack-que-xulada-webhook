@@ -81,6 +81,10 @@ export const addReaction = async (env: Environment, options: ReactionOptions): P
       return
     }
 
+    if (data.error === 'invalid_name') {
+      console.debug(`Selected reaction name is invalid: ${options.name}`)
+    }
+
     throw new Error(`Failed to react to message: ${data.error}`)
   }
 }
